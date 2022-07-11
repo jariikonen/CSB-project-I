@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Polls</title>
+    <style>label { vertical-align: top; }</style>
+  </head>
+  <body>
+    {% if request.user.username %}<p>Logged in as {{ request.user.username }} (<a href="/accounts/logout/?next=/">logout</a>)</p>
+    {% elif request.path != '/accounts/login/' %}<a href="/accounts/login/?next={{ request.path }}">Login</a>
+    {% endif %}
+    
+    {% block content %}{% endblock %}
+
+    {% url 'polls:index' as index_url %}
+    {% if request.path != index_url %}
+      <h3>Navigate</h3>
+      <a href="{% url 'polls:index' %}">Back to start</a>
+    {% endif %}
+  </body>
+</html>

@@ -1,0 +1,20 @@
+{% extends 'polls/base.html' %}
+{% block content %}
+    <form action="{% url 'polls:change_password' %}" method="post">
+      {% csrf_token %}
+      <fieldset>
+        <legend><h1>Change password for '{{ username }}'</h1></legend>
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+        <input type="hidden" name="username" value="{{ username }}">
+        {% for answer in security_answer_list %}
+          <label for="answer{{ forloop.counter }}_id">{{ answer.question.question_text }} </label>
+          <input type="text" maxlength="200" name="answer{{ forloop.counter }}" id="answer{{ forloop.counter }}_id"><br>
+        {% endfor %}
+        <label for="new_password_1_id">New password:</label>
+        <input type="password" maxlength="200" name="new_password_1" id="new_password_1_id"><br>
+        <label for="new_password_2_id">New password again:</label>
+        <input type="password" maxlength="200" name="new_password_2" id="new_password_2_id">
+      </fieldset>
+      <input type="submit" value="Submit">
+    </form>
+{% endblock %}

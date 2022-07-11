@@ -1,0 +1,40 @@
+{% extends 'polls/base.html' %}
+{% block content %}
+    <h1>Polls</h1>
+    {% if latest_question_list %}
+      <ul>
+      {% for question in latest_question_list %}
+        <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <p>No polls are available.</p>
+    {% endif %}
+  
+    <h1>Messages</h1>
+    {% if latest_messages_list %}
+    <!-- FLAW 3: Remove comment tags and comment out vulnerable code to fix the vulnerability. -->
+    {% comment %}{% load bleach_tags %}{% endcomment %}
+      {% for message in latest_messages_list %}
+        <h3>{{ message.heading_text }}</h3>
+        <p>{{ message.content_text|safe }}</p>
+    <!--<h3>{% comment %}{{ message.heading_text|bleach:'' }}{% endcomment %}</h3>
+        <p>{% comment %}{{ message.content_text|bleach }}{% endcomment %}</p>-->
+      {% endfor %}
+    {% else %}
+      <p>No messages.</p>
+    {% endif %}
+
+    <form action="{% url 'polls:add_message' %}" method="post">
+      {% csrf_token %}
+      <fieldset>
+        <legend><h3>Add new message</h3></legend>
+        <label for="id_heading">Heading:</label>
+        <input type="text" name="heading_text" maxlength="200" id="id_heading"><br>
+        <p>You can use html tags to format the message content (&lt;b&gt;, &lt;i&gt;, &lt;u&gt;, &lt;mark&gt;, &lt;small&gt;, &lt;del&gt;, &lt;sub&gt;, &lt;sup&gt;).</p>
+        <label for="id_content">Content:</label>
+        <textarea name="content_text" id="id_content" rows="4" cols="50"></textarea>
+      </fieldset>
+      <input type="submit" value="Add">
+    </form>
+{% endblock %}
